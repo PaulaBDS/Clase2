@@ -1,0 +1,106 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled3.ipynb",
+      "version": "0.3.2",
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/PaulaBDS/Clase2/blob/master/EDO%20RK4\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "AzNE1aTnc7b9",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "def pasoRK4(dt,ecMov,estado):\n",
+        "  \n",
+        "  k1 = ecMov\n",
+        "  k2 = ecuacionDeMovimiento(estado+(dt/2)*k1)\n",
+        "  k3 = ecuacionDeMovimiento(estado+(dt/2)*k2)\n",
+        "  k4 = ecuacionDeMovimiento(estado+dt*k3)\n",
+        "  \n",
+        "  k = k1 + 2*k2 + 2*k3 + k4\n",
+        "  \n",
+        "  return (dt/6)*k\n",
+        "  "
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "rkvrmjbSc-Hq",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "def solveRK4(e0, ecMov, dt, T):\n",
+        "  \n",
+        "  N = int(T/dt)\n",
+        "  estados = np.empty((N,4))\n",
+        "  estados[0] = e0\n",
+        "  print (estados[0])\n",
+        "  for i in range (1,N):\n",
+        "    estados[i] = estados[i-1] + pasoRK4(dt,ecMov,estados[i-1])\n",
+        "    ecMov = ecuacionDeMovimiento(estados[i])\n",
+        "  return estados"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xcSsifBKdAIM",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "estado = np.array([10,0,0,0.3])\n",
+        "\n",
+        "a = ecuacionDeMovimiento(estado)\n",
+        "\n",
+        "e0 = np.array([10.0,0,0,0.3])\n",
+        "\n",
+        "b= solveRK4(e0,a,0.1,200)\n",
+        "\n",
+        "c = solveRK4(e0,a,1,700)\n",
+        "\n",
+        "fig, ax = plt.subplots(figsize = (15,5), ncols = 2)\n",
+        "\n",
+        "ax[0].plot(b[:,0],b[:,1])\n",
+        "ax[0].set_title('Runge Kuta 4')\n",
+        "ax[0].set_xlabel('Movimiento en x')\n",
+        "ax[0].set_ylabel('Movimiento en y')\n",
+        "\n",
+        "ax[1].plot(c[:,0],c[:,1])\n",
+        "ax[1].set_title('Runge Kuta 4')\n",
+        "ax[1].set_xlabel('Movimiento en x')\n",
+        "ax[1].set_ylabel('Movimiento en y')"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    }
+  ]
+}
